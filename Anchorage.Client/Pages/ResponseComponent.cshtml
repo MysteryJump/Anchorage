@@ -1,0 +1,26 @@
+﻿<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">
+            @ResponseCount : <a href="@Mail">@Name</a>
+            <time datetime="@Created">@Created.ToString("yyyy/MM/dd (ddd) HH:mm:ss.ff") ID:@Author</time>
+        </h5>
+        <p class="card-text response-text">
+            <pre style="font-size:100%;">@Body</pre>
+        </p>
+    </div>
+</div>
+
+@functions{
+    [Parameter]
+    private string Name { get; set; }
+    [Parameter]
+    private string Mail { get; set; }
+    [Parameter]
+    private string Body { get; set; }
+    [Parameter]
+    private int ResponseCount { get; set; }
+    [Parameter]
+    private DateTime Created { get; set; }
+    [Parameter]
+    private string Author { get; set; }
+}

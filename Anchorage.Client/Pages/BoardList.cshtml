@@ -1,0 +1,46 @@
+﻿@page "/boards"
+@using Anchorage.Shared.Models
+@inject HttpClient Http
+
+<h1>Board List</h1>
+
+@if (boards == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <div class="list-group">
+        @foreach (var board in boards)
+        {
+            <a href="boards/@board.BoardKey" class="list-group-item list-group-item-action">@board.BoardName</a>
+        }
+    </div>
+    @*<table class="table">
+        <thead>
+            <tr>
+                <th>Board Name</th>
+                <th>Board Key</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var board in boards)
+            {
+                <tr>
+                    <td>@board.BoardName</td>
+                    <td>@board.BoardKey</td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+}
+
+@functions {
+Board[] boards;
+
+protected override async Task OnInitAsync()
+{
+    boards = await Http.GetJsonAsync<Board[]>("api/boards");
+}
+}
