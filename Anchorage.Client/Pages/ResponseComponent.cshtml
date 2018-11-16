@@ -1,7 +1,16 @@
 ﻿<div class="card">
     <div class="card-body">
         <h5 class="card-title">
-            @ResponseCount : <a href="@Mail">@Name</a>
+            @ResponseCount : @{
+                if (!IsNullOrEmptyMail)
+                {
+                    <a href="mailto:@Mail">@Name</a>
+                }
+                else
+                {
+                    @Name
+                }
+                }
             <time datetime="@Created">@Created.ToString("yyyy/MM/dd (ddd) HH:mm:ss.ff") ID:@Author</time>
         </h5>
         <p class="card-text response-text">
@@ -23,4 +32,7 @@
     private DateTime Created { get; set; }
     [Parameter]
     private string Author { get; set; }
+
+    private bool IsNullOrEmptyMail => string.IsNullOrEmpty(Mail);
+
 }

@@ -47,7 +47,7 @@ namespace Anchorage.Server.Controllers
             {
                 return NotFound();
             }
-            board.Child = await _context.Threads.Where(x => x.BoardKey == boardKey).ToListAsync();
+            board.Child = await _context.Threads.Where(x => x.BoardKey == boardKey).OrderByDescending(x => x.Modified).ToListAsync();
             return Ok(board);
         }
         // GET: api/Boards/news7vip/1 (child id)
@@ -69,9 +69,11 @@ namespace Anchorage.Server.Controllers
         public async Task<IActionResult> CreateThread([FromRoute] string boardKey,[FromBody]ClientThread thread)
         {
 
-            var body = new Thread();
-            body.BoardKey = boardKey;
-            body.Title = thread.Title;
+            var body = new Thread
+            {
+                BoardKey = boardKey,
+                Title = thread.Title
+            };
             var response = new Response() {  Body = thread.Response.Body, Mail = thread.Response.Mail , Name = thread.Response.Name };
             
             if (response == null)
@@ -171,7 +173,7 @@ namespace Anchorage.Server.Controllers
             try
             {
                 var ip = Dns.GetHostEntry(Dns.GetHostName());
-                return ip.AddressList[3].ToString();
+                return ip.AddressList[0].ToString();
             }
             catch (SocketException)
             {
