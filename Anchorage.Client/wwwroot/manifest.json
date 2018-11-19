@@ -1,0 +1,14 @@
+{
+  "name": "Anchorage",
+  "short_name": "ANC",
+  "description": "BBS system like 5ch",
+  "icons": [
+    {
+      "sizes": "any",
+      "src": "images/icon.png",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "/"
+}

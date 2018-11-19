@@ -33,6 +33,8 @@ namespace Anchorage.Shared.Models
 
         [NotMapped]
         public double Influence => Created != DateTime.MinValue ? ResponseCount / ((DateTime.Now - Created).TotalSeconds / 86400.0) : -1;
+        
+        public long DatKey { get; set; }
 
         /// <summary>
         /// Initialize for write in Database.

@@ -23,7 +23,6 @@ namespace Anchorage.Server.Controllers
         }
 
         [Route("")]
-        [HttpHead(Name = "Accept-Ranges: bytes")]
         [Produces("text/plain; charset=shift_jis")]
         public async Task<string> Index([FromRoute] string boardKey)
         {
