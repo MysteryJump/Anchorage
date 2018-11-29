@@ -20,6 +20,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 namespace Anchorage.Server
 {
@@ -61,6 +63,7 @@ namespace Anchorage.Server
                         mysqlOptions.ServerVersion(new Version(Configuration.GetConnectionString("ServerVersion")), serverType); 
                     }
             ));
+            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
             //services.Configure<MvcOptions>(options =>
             //{
             //    options.InputFormatters.Add(new )

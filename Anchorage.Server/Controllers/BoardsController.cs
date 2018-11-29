@@ -10,6 +10,7 @@ using Anchorage.Shared.Models;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;
+using Anchorage.Server.Controllers.Common;
 
 namespace Anchorage.Server.Controllers
 {
@@ -80,8 +81,13 @@ namespace Anchorage.Server.Controllers
             {
                 return BadRequest();
             }
-            var ip = GetHostName();
+            var ip = IpManager.GetHostName();
             body.Initialize(ip);
+            if (Startup.IsUsingLegacyMode)
+            {
+                if (await _context.Threads.AnyAsync(x => x.DatKey == body.DatKey))
+                    return BadRequest();
+            }
             
             var result =  _context.Threads.Add(body);
             await _context.SaveChangesAsync();
@@ -101,7 +107,7 @@ namespace Anchorage.Server.Controllers
                 return BadRequest();
             }
             var response = new Response() { Name = body.Name, Mail = body.Mail, Body = body.Body };
-            response.Initialize(threadId,GetHostName(),boardKey);
+            response.Initialize(threadId, IpManager.GetHostName(),boardKey);
             _context.Responses.Add(response);
             thread.ResponseCount += 1;
             thread.Modified = response.Created;
@@ -168,18 +174,6 @@ namespace Anchorage.Server.Controllers
             return _context.Boards.Any(e => e.BoardKey == boardKey);
         }
 
-        private string GetHostName()
-        {
-            try
-            {
-                var ip = Dns.GetHostEntry(Dns.GetHostName());
-                return ip.AddressList[0].ToString();
-            }
-            catch (SocketException)
-            {
 
-                return null;
-            }
-        }
     }
 }

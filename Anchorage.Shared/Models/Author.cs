@@ -12,7 +12,7 @@ namespace Anchorage.Shared.Models
         {
             using (var alg = SHA512.Create())
             {
-                var data = alg.ComputeHash(Encoding.UTF8.GetBytes(hostAddress + "-" + DateTime.Now.ToString("yyyy/MM/dd") + "-" + boardKey));
+                var data = alg.ComputeHash(Encoding.UTF8.GetBytes(hostAddress + "-" + DateTimeOffset.Now.ToString("yyyy/MM/dd") + "-" + boardKey));
                 return Convert.ToBase64String(data).Replace("+", "").Replace("=", "").Replace("/", "").Remove(9);
             }
         }

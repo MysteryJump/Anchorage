@@ -35,7 +35,7 @@ namespace Anchorage.Server.Controllers
             var ts = new TimeSpan(+9, 0, 0);
             foreach (var item in data)
             {
-                sb.AppendLine($"{new DateTimeOffset(item.Created, ts).ToUnixTimeSeconds()}.dat<>{item.Title} ({item.ResponseCount})");
+                sb.AppendLine($"{item.DatKey}.dat<>{item.Title} ({item.ResponseCount})");
             }
 
             var utf = Encoding.Default;

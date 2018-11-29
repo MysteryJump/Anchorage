@@ -1,5 +1,6 @@
 ﻿@page "/boards/{boardKey}/{threadId}"
 @using Anchorage.Shared.Models
+@using System.Timers
 @inject HttpClient Http
 
 @if (thread == null)
@@ -61,7 +62,7 @@ else
 
 
 @functions {
-    Thread thread;
+    private Thread thread { get; set; }
 
     [Parameter]
     private string BoardKey { get; set; }
@@ -76,10 +77,13 @@ else
 
     protected override async Task OnInitAsync()
     {
-        thread = await Http.GetJsonAsync<Thread>($"api/boards/{BoardKey}/{ThreadId}");
+        await GetThreadAsync();
         var board = await Http.GetJsonAsync<Board>($"api/boards/{BoardKey}");
         BoardDefaultName = board.BoardDefaultName;
-
+        Globals.AutoReloadTimer = new Timer();
+        Globals.AutoReloadTimer.Elapsed += async (e, args) => await GetThreadAsync();
+        Globals.AutoReloadTimer.Interval = 5000;
+        Globals.AutoReloadTimer.Start();
     }
 
     private async Task PostResponse()
@@ -94,8 +98,15 @@ else
 
         await Http.PostJsonAsync<Response>($"api/boards/{BoardKey}/{ThreadId}", response);
 
-        await OnInitAsync();
+        await GetThreadAsync();
         Body = String.Empty;
     }
+
+    private async Task GetThreadAsync()
+    {
+        thread = await Http.GetJsonAsync<Thread>($"api/boards/{BoardKey}/{ThreadId}");
+        StateHasChanged();
+    }
+
 
 }

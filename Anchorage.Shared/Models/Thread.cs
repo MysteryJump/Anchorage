@@ -45,6 +45,8 @@ namespace Anchorage.Shared.Models
             Modified = Created = time;
             ResponseCount = 1;
             Author = Models.Author.GenerateAuthorId(ip, BoardKey);
+            DatKey = new DateTimeOffset(time,new TimeSpan(+9,0,0)).ToUnixTimeSeconds();
+            
         }
     }
 
