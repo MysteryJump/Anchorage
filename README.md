@@ -1,4 +1,4 @@
-[![App Veyor](https://ci.appveyor.com/api/github/webhook?id=wn1c97y76df3k2r6)](https://ci.appveyor.com/api/github/webhook?id=wn1c97y76df3k2r6)
+[![App veyor](https://ci.appveyor.com/api/projects/status/github/MysteryJump/Anchorage?svg=true)](https://ci.appveyor.com/api/projects/status/github/MysteryJump/Anchorage)
 
 # Anchorage
 Innovative 5ch like BBS system.
