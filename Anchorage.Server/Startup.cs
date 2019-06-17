@@ -21,7 +21,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Reflection;
+using System.IO;
+//using Swashbuckle.AspNetCore.Swagger;
 
 namespace Anchorage.Server
 {
@@ -63,16 +66,26 @@ namespace Anchorage.Server
                         mysqlOptions.ServerVersion(new Version(Configuration.GetConnectionString("ServerVersion")), serverType); 
                     }
             ));
-            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+
+            services.AddSwaggerDocument();
+            // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);  
             //services.Configure<MvcOptions>(options =>
             //{
             //    options.InputFormatters.Add(new )
             //})
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("amiens", new Info { Title = "Amiens", Version = "v1",  });
+            //    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    //c.IncludeXmlComments(xmlPath);
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,6 +98,10 @@ namespace Anchorage.Server
             {
                 app.UseHttpsRedirection();
             }
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             IsUsingLegacyMode = Configuration.GetValue<bool>("UseLegacymode");
             app.UseMvc(routes =>
             {
@@ -94,6 +111,17 @@ namespace Anchorage.Server
                     );
 
             });
+            //app.UseSwagger();
+
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Amiens API");
+            //});
+            app.UseStaticFiles();
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
             app.UseBlazor<Client.Program>();
             
         }

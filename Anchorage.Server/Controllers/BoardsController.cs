@@ -81,7 +81,7 @@ namespace Anchorage.Server.Controllers
             {
                 return BadRequest();
             }
-            var ip = IpManager.GetHostName();
+            var ip = IpManager.GetHostName(HttpContext.Connection);
             body.Initialize(ip);
             if (Startup.IsUsingLegacyMode)
             {
@@ -107,7 +107,7 @@ namespace Anchorage.Server.Controllers
                 return BadRequest();
             }
             var response = new Response() { Name = body.Name, Mail = body.Mail, Body = body.Body };
-            response.Initialize(threadId, IpManager.GetHostName(),boardKey);
+            response.Initialize(threadId, IpManager.GetHostName(HttpContext.Connection) ,boardKey);
             _context.Responses.Add(response);
             thread.ResponseCount += 1;
             thread.Modified = response.Created;

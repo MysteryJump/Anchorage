@@ -39,5 +39,7 @@ namespace Anchorage.Server.Models
                 new Response(){ Author="gerg", Body = "なあなあでおわらせてはいけない", Created = DateTime.Now, Id = 5, ThreadId = 3, HostAddress="114.51.41.91"}
             });
         }
+
+        public DbSet<Anchorage.Shared.Models.User> User { get; set; }
     }
 }
