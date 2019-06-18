@@ -59,7 +59,7 @@ namespace Anchorage.Server.Controllers
             {
                 Name = collections["FROM"];
                 Mail = collections["mail"];
-
+                var a = collections["MESSAGE"];
                 var tst = Encoding.UTF8.GetString(Encoding.Convert(Encoding.GetEncoding("Shift_JIS"),
                     Encoding.UTF8, Encoding.GetEncoding("Shift_JIS").GetBytes(collections["MESSAGE"])));
 

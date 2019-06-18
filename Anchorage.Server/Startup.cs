@@ -67,6 +67,8 @@ namespace Anchorage.Server
                     }
             ));
 
+            
+
             services.AddSwaggerDocument();
             // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);  
             //services.Configure<MvcOptions>(options =>
