@@ -67,7 +67,7 @@ namespace Anchorage.Server
                     }
             ));
 
-            
+            services.AddSession();
 
             services.AddSwaggerDocument();
             // services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);  
@@ -87,6 +87,8 @@ namespace Anchorage.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseStaticFiles();
+            app.UseSession();
 
             if (env.IsDevelopment())
             {
@@ -119,8 +121,6 @@ namespace Anchorage.Server
             //{
             //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Amiens API");
             //});
-            app.UseStaticFiles();
-
             // Register the Swagger generator and the Swagger UI middlewares
             app.UseOpenApi();
             app.UseSwaggerUi3();
@@ -129,18 +129,4 @@ namespace Anchorage.Server
         }
     }
 
-    //public class LegacyViewOutputFormatter : TextOutputFormatter
-    //{
-    //    public LegacyViewOutputFormatter()
-    //    {
-    //        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/plain"));
-
-    //        SupportedEncodings.Add(Encoding.GetEncoding("shift_jis"));
-    //    }
-
-    //    public override Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
-    //    {
-    //        context.
-    //    }
-    //}
 }

@@ -3,14 +3,16 @@ using System;
 using Anchorage.Server.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Anchorage.Server.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20190619051052_safa333")]
+    partial class safa333
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,11 +88,11 @@ namespace Anchorage.Server.Migrations
                     b.ToTable("Responses");
 
                     b.HasData(
-                        new { Id = 1, Author = "oienriboe", Body = "うんちぶりぶりのすばらしさはいじょうなものであるということ", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 1 },
-                        new { Id = 2, Author = "gerg", Body = "やはりなというかんじである", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 1 },
-                        new { Id = 3, Author = "fweg", Body = "それはいえどもわれわれのかんじるところではないな", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), HostAddress = "192.168.0.0.1", ThreadId = 2 },
-                        new { Id = 4, Author = "oienriboe", Body = "ではやはりそうとであるか", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 2 },
-                        new { Id = 5, Author = "gerg", Body = "なあなあでおわらせてはいけない", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), HostAddress = "114.51.41.91", ThreadId = 3 }
+                        new { Id = 1, Author = "oienriboe", Body = "うんちぶりぶりのすばらしさはいじょうなものであるということ", Created = new DateTime(2019, 6, 19, 14, 10, 52, 88, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 1 },
+                        new { Id = 2, Author = "gerg", Body = "やはりなというかんじである", Created = new DateTime(2019, 6, 19, 14, 10, 52, 88, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 1 },
+                        new { Id = 3, Author = "fweg", Body = "それはいえどもわれわれのかんじるところではないな", Created = new DateTime(2019, 6, 19, 14, 10, 52, 88, DateTimeKind.Local), HostAddress = "192.168.0.0.1", ThreadId = 2 },
+                        new { Id = 4, Author = "oienriboe", Body = "ではやはりそうとであるか", Created = new DateTime(2019, 6, 19, 14, 10, 52, 88, DateTimeKind.Local), HostAddress = "127.0.0.1", ThreadId = 2 },
+                        new { Id = 5, Author = "gerg", Body = "なあなあでおわらせてはいけない", Created = new DateTime(2019, 6, 19, 14, 10, 52, 88, DateTimeKind.Local), HostAddress = "114.51.41.91", ThreadId = 3 }
                     );
                 });
 
@@ -121,9 +123,9 @@ namespace Anchorage.Server.Migrations
                     b.ToTable("Threads");
 
                     b.HasData(
-                        new { ThreadId = 1, Author = "oienriboe", BoardKey = "news7vip", Created = new DateTime(2019, 6, 21, 13, 17, 21, 535, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 21, 13, 17, 21, 535, DateTimeKind.Local), ResponseCount = 2, Title = "ええな" },
-                        new { ThreadId = 2, Author = "fweg", BoardKey = "news7vip", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), ResponseCount = 2, Title = "ええぞ" },
-                        new { ThreadId = 3, Author = "gerg", BoardKey = "coffeehouse", Created = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 21, 13, 17, 21, 536, DateTimeKind.Local), ResponseCount = 1, Title = "いいぞ" }
+                        new { ThreadId = 1, Author = "oienriboe", BoardKey = "news7vip", Created = new DateTime(2019, 6, 19, 14, 10, 52, 86, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 19, 14, 10, 52, 87, DateTimeKind.Local), ResponseCount = 2, Title = "ええな" },
+                        new { ThreadId = 2, Author = "fweg", BoardKey = "news7vip", Created = new DateTime(2019, 6, 19, 14, 10, 52, 87, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 19, 14, 10, 52, 87, DateTimeKind.Local), ResponseCount = 2, Title = "ええぞ" },
+                        new { ThreadId = 3, Author = "gerg", BoardKey = "coffeehouse", Created = new DateTime(2019, 6, 19, 14, 10, 52, 87, DateTimeKind.Local), DatKey = 0L, Modified = new DateTime(2019, 6, 19, 14, 10, 52, 87, DateTimeKind.Local), ResponseCount = 1, Title = "いいぞ" }
                     );
                 });
 
@@ -132,9 +134,8 @@ namespace Anchorage.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Authority");
-
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired();
 
                     b.Property<string>("UserId")
                         .IsRequired();

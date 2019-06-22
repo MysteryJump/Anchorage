@@ -15,11 +15,13 @@ namespace Anchorage.Shared.Models
         [Required]
         public string BoardKey { get; set; }
         [Required]
+        [SettingTxt("BBS_TITLE")]
         public string BoardName { get; set; }
         [NotMapped]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Thread> Child { get; set; }
         [Required]
+        [SettingTxt("BBS_NONAME_NAME")]
         public string BoardDefaultName { get; set; }
         
     }

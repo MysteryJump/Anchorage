@@ -27,18 +27,30 @@ namespace Anchorage.Server.Controllers
             _context = context;
         }
         [Route("")]
-        [Consumes("application/x-www-form-urlencoded")]
+        // [Consumes("application/x-www-form-urlencoded")]
+        [Produces("text/plain; charset=shift_jis")]
         [HttpPost()]
-        public async Task<string> Index()
+        public async Task<IActionResult> Index()
         {
-            var forms = HttpContext.Request.Form;
+            // var forms = HttpContext.Request.Form;
             var body = HttpContext.Request.Body;
             var sr = new StreamReader(Request.Body);
-            var str = sr.ReadToEnd();
+            var str = await sr.ReadToEndAsync();
 
-            var req = new BbsCgiRequest(forms, _context, HttpContext.Connection);
+            var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
             await req.ApplyRequest();
-            return null;
+            return Ok(@"<html lang = ""ja"">
+<head>
+<title>書きこみました。</ title>
+<meta http - equiv = ""Content-Type"" content = ""text/html; charset=shift_jis"">
+</ head>
+<body>書きこみが終わりました。<br><br>
+画面を切り替えるまでしばらくお待ち下さい。<br><br>
+<br><br><br><br><br>
+<center>
+</ center>
+</ body>
+</ html>");
             
         }
 
@@ -55,27 +67,48 @@ namespace Anchorage.Server.Controllers
 
             private MainContext _context;
             private ConnectionInfo _connectionInfo;
-            public BbsCgiRequest(IFormCollection collections, MainContext context, ConnectionInfo connectionInfo)
+            public BbsCgiRequest(string rawText, MainContext context, ConnectionInfo connectionInfo)
             {
-                Name = collections["FROM"];
-                Mail = collections["mail"];
-                var a = collections["MESSAGE"];
-                var tst = Encoding.UTF8.GetString(Encoding.Convert(Encoding.GetEncoding("Shift_JIS"),
-                    Encoding.UTF8, Encoding.GetEncoding("Shift_JIS").GetBytes(collections["MESSAGE"])));
-
-
-                Body = HttpUtility.UrlDecode(HttpUtility.HtmlDecode(collections["MESSAGE"]), Encoding.GetEncoding("Shift-JIS"));
-
-
-                BoardKey = collections["bbs"];
-                if (collections.ContainsKey("key"))
+                var splittedKeys = rawText.Split('&');
+                var sjis = Encoding.GetEncoding("Shift-JIS");
+                foreach (var item in splittedKeys)
                 {
-                    DatKey = collections["key"];
-                    IsThread = false;
-                }
-                else
-                {
-                    Title = collections["title"];
+                    if (!item.Contains("="))
+                        throw new ArgumentException();
+                    var keyValues = item.Split('=').ToList();
+                   
+                    var key = keyValues[0];
+                    switch (key)
+                    {
+                        case "bbs":
+                            BoardKey = keyValues[1];
+                            break;
+                        case "key":
+                            DatKey = keyValues[1];
+                            break;
+                        case "FROM":
+                            Name = HttpUtility.UrlDecode(keyValues[1], sjis);
+                            break;
+                        case "mail":
+                            Mail = HttpUtility.UrlDecode(keyValues[1], sjis);
+                            break;
+                        case "MESSAGE":
+                            Body = HttpUtility.UrlDecode(keyValues[1], sjis);
+                            break;
+                        case "subject":
+                            Title = HttpUtility.UrlDecode(keyValues[1], sjis);
+                            break;
+                        case "submit":
+                            if (keyValues[1] == "%90V%8BK%83X%83%8C%83b%83h%8D%EC%90%AC")
+                            {
+                                IsThread = true;
+                            }
+                            else if (keyValues[1] == "%8F%91%82%AB%8D%9E%82%DE")
+                            {
+                                IsThread = false;
+                            }
+                            break;
+                    }
                 }
                 _context = context;
                 _connectionInfo = connectionInfo;

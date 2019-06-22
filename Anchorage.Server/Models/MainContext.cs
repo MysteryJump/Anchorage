@@ -15,9 +15,13 @@ namespace Anchorage.Server.Models
         public DbSet<Board> Boards { get; set; }
         public DbSet<Thread> Threads { get; set; }
         public DbSet<Response> Responses { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<User>().HasIndex(x => x.UserId).IsUnique(true);
 
             modelBuilder.Entity<Board>().HasData(new[]
             {
@@ -39,7 +43,5 @@ namespace Anchorage.Server.Models
                 new Response(){ Author="gerg", Body = "なあなあでおわらせてはいけない", Created = DateTime.Now, Id = 5, ThreadId = 3, HostAddress="114.51.41.91"}
             });
         }
-
-        public DbSet<Anchorage.Shared.Models.User> User { get; set; }
     }
 }

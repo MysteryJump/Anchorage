@@ -30,8 +30,8 @@ namespace Anchorage.Server.Controllers
             {
                 return "";
             }
-            var data = await _context.Threads.Where(x => x.BoardKey == boardKey && x.DatKey == long.Parse(datKey)).FirstOrDefaultAsync();
-                
+            var data = await _context.Threads.FirstOrDefaultAsync(x => x.BoardKey == boardKey && x.DatKey == long.Parse(datKey));
+            var board = await _context.Boards.FirstOrDefaultAsync(x => x.BoardKey == boardKey);
             if (data == null)
             {
                 return "";
@@ -42,6 +42,10 @@ namespace Anchorage.Server.Controllers
             var responses = await _context.Responses.Where(x => x.ThreadId == data.ThreadId).OrderBy(x => x.Created).ToListAsync();
             foreach (var item in responses)
             {
+                if (string.IsNullOrEmpty(item.Name))
+                {
+                    item.Name = board.BoardDefaultName;
+                }
                 if (isfirst)
                 {
                     sb.AppendLine($"{item.Name}<>{item.Mail}<>{item.Created} ID:{item.Author}<> {item.Body} <> {data.Title}");
@@ -53,12 +57,13 @@ namespace Anchorage.Server.Controllers
                 }
             }
 
-            var utf = Encoding.Default;
-            var shiftJis = Encoding.GetEncoding("Shift_JIS");
+            //var utf = Encoding.Default;
+            //var shiftJis = Encoding.GetEncoding("Shift_JIS");
 
-            var ubytes = utf.GetBytes(sb.ToString());
-            var bytests = Encoding.Convert(utf, shiftJis, ubytes);
-            return shiftJis.GetString(bytests);
+            //var ubytes = utf.GetBytes(sb.ToString());
+            //var bytests = Encoding.Convert(utf, shiftJis, ubytes);
+            //return shiftJis.GetString(bytests);
+            return sb.ToString();
         }
     }
 }

@@ -55,6 +55,8 @@ namespace Anchorage.Server.Controllers
         [HttpGet("{boardKey}/{threadId}")]
         public async Task<IActionResult> GetThread([FromRoute]string boardKey, [FromRoute] int threadId)
         {
+            var isAdmin = await IsAdminAsync();
+            
             var thread = await _context.Threads.FindAsync(threadId);
             if (thread == null || thread.BoardKey != boardKey)
             {
@@ -62,6 +64,14 @@ namespace Anchorage.Server.Controllers
             }
 
             thread.Responses = await _context.Responses.Where(x => x.ThreadId == threadId).ToListAsync();
+            if (!isAdmin)
+            {
+                foreach (var item in thread.Responses)
+                {
+                    item.HostAddress = null;
+                }
+            }
+
             return Ok(thread);
         }
 
@@ -75,7 +85,7 @@ namespace Anchorage.Server.Controllers
                 BoardKey = boardKey,
                 Title = thread.Title
             };
-            var response = new Response() {  Body = thread.Response.Body, Mail = thread.Response.Mail , Name = thread.Response.Name };
+            var response = new Response() { Body = thread.Response.Body, Mail = thread.Response.Mail , Name = thread.Response.Name };
             
             if (response == null)
             {
@@ -113,6 +123,28 @@ namespace Anchorage.Server.Controllers
             thread.Modified = response.Created;
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetThread), new { id = threadId }, response);
+        }
+
+        [HttpDelete("{boardKey}/{threadId}/{responseId}")]
+        public async Task<IActionResult> DeleteResponse([FromRoute] string boardKey, [FromRoute] int threadId, [FromRoute] int responseId)
+        {
+            if (!(await IsAdminAsync()))
+            {
+                return Unauthorized();
+            }
+
+            var response = await _context.Responses.FirstOrDefaultAsync(x => x.ThreadId == threadId && x.Id == responseId);
+            if (response == null || (await _context.Threads.FindAsync(threadId)).BoardKey != boardKey)
+            {
+                return BadRequest();
+            }
+            response.Body = "あぼーん";
+            response.Author = "";
+            response.Created = DateTime.MinValue;
+            response.Name = "あぼーん";
+            response.Mail = "あぼーん";
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
         #region Unused region
@@ -173,7 +205,19 @@ namespace Anchorage.Server.Controllers
         {
             return _context.Boards.Any(e => e.BoardKey == boardKey);
         }
-
+        private async Task<bool> IsAdminAsync()
+        {
+            if (HttpContext.Request.Cookies.ContainsKey("sessiontoken"))
+            {
+                var session = await UserSession.CheckSession(_context, HttpContext.Request.Cookies["sessiontoken"]);
+                if (session != null &&
+                    ((await _context.Users.FindAsync(session.UserId)).Authority & UserAuthority.Admin) == UserAuthority.Admin)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 }

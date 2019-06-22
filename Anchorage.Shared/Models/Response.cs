@@ -24,7 +24,7 @@ namespace Anchorage.Shared.Models
         public int ThreadId { get; set; }
 
         [Required]
-        [JsonIgnore]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string HostAddress { get; set; }
 
         /// <summary>
