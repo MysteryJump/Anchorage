@@ -36,21 +36,39 @@ namespace Anchorage.Server.Controllers
             var body = HttpContext.Request.Body;
             var sr = new StreamReader(Request.Body);
             var str = await sr.ReadToEndAsync();
-
-            var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
-            await req.ApplyRequest();
-            return Ok(@"<html lang = ""ja"">
+            try
+            {
+                var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
+                await req.ApplyRequest();
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (ex.Message == "Body or Title (if you make thread) is neeeded.")
+                {
+                    return BadRequest(ex.Message);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            
+            return Ok(@"<html lang=""ja"">
 <head>
-<title>書きこみました。</ title>
-<meta http - equiv = ""Content-Type"" content = ""text/html; charset=shift_jis"">
-</ head>
+<title>書きこみました。</title>
+<meta http-equiv=""Content-Type"" content=""text/html; charset=shift_jis"">
+</head>
 <body>書きこみが終わりました。<br><br>
 画面を切り替えるまでしばらくお待ち下さい。<br><br>
 <br><br><br><br><br>
 <center>
-</ center>
-</ body>
-</ html>");
+</center>
+</body>
+</html>");
             
         }
 
@@ -112,6 +130,10 @@ namespace Anchorage.Server.Controllers
                 }
                 _context = context;
                 _connectionInfo = connectionInfo;
+                if (string.IsNullOrEmpty(Body) || (IsThread && string.IsNullOrEmpty(Title)))
+                {
+                    throw new InvalidOperationException("Body or Title (if you make thread) is neeeded.");
+                }
             }
 
             public async Task ApplyRequest()
