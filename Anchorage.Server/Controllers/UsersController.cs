@@ -55,6 +55,9 @@ namespace Anchorage.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (!(await IsAdminAsync())) {
+                return Unauthorized();
+            }
             var password = user.Password;
             _context.Users.Add(user);
 
@@ -90,6 +93,20 @@ namespace Anchorage.Server.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+
+        private async Task<bool> IsAdminAsync()
+        {
+            if (HttpContext.Request.Cookies.ContainsKey("sessiontoken"))
+            {
+                var session = await UserSession.CheckSession(_context, HttpContext.Request.Cookies["sessiontoken"]);
+                if (session != null &&
+                    ((await _context.Users.FindAsync(session.UserId)).Authority & UserAuthority.Admin) == UserAuthority.Admin)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

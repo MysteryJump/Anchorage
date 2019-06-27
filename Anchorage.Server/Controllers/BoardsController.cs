@@ -158,11 +158,11 @@ namespace Anchorage.Server.Controllers
 
         // POST: api/Boards
         [HttpPost]
-        public async Task<IActionResult> PostBoard([FromBody] Board board, [FromHeader] string xxx)
+        public async Task<IActionResult> PostBoard([FromBody] Board board)
         {
-            if (xxx != "ENTRY")
+            if (!(await IsAdminAsync()))
             {
-                return BadRequest();
+                return Unauthorized();
             }
             if (!ModelState.IsValid)
             {
@@ -177,11 +177,11 @@ namespace Anchorage.Server.Controllers
 
         // DELETE: api/Boards/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBoard([FromRoute] int id,[FromHeader] string xxx)
+        public async Task<IActionResult> DeleteBoard([FromRoute] int id)
         {
-            if (xxx != "ENTRY")
+            if (!(await IsAdminAsync()))
             {
-                return BadRequest();
+                return Unauthorized();
             }
             if (!ModelState.IsValid)
             {

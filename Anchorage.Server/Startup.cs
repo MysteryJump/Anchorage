@@ -38,20 +38,26 @@ namespace Anchorage.Server
         public IConfiguration Configuration { get; }
 
         public static bool IsUsingLegacyMode { get; private set; }
+        public static bool IsBlazorMode { get; private set; } = false;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddProgressiveWebApp();
-            services.AddResponseCompression(options =>
+            // Blazor area
+            if (IsBlazorMode)
             {
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                services.AddProgressiveWebApp();
+                services.AddResponseCompression(options =>
                 {
-                    MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
+                    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                    {
+                        MediaTypeNames.Application.Octet,
+                        WasmMediaTypeNames.Application.Wasm,
+                    });
                 });
-            });
+            }
+
             services.AddMvc(options =>
             {
                 options.OutputFormatters.Add(new ShiftJISTextOutputFormatter());
@@ -82,12 +88,23 @@ namespace Anchorage.Server
             //    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             //    //c.IncludeXmlComments(xmlPath);
             //});
+            // SPA area
+            if (!IsBlazorMode)
+            {
+                services.AddSpaStaticFiles(configuration =>
+                {
+                    configuration.RootPath = "ClientApp/dist/anchorage-client";
+                    
+                });
+            }
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseSession();
 
             if (env.IsDevelopment())
@@ -96,6 +113,7 @@ namespace Anchorage.Server
             }
             else
             {
+                // app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
             if (Configuration.GetValue<bool>("RestrictHTTPConnection"))
@@ -124,7 +142,20 @@ namespace Anchorage.Server
             // Register the Swagger generator and the Swagger UI middlewares
             app.UseOpenApi();
             app.UseSwaggerUi3();
-            app.UseBlazor<Client.Program>();
+            if (IsBlazorMode)
+            {
+                app.UseBlazor<Client.Program>();
+            }
+            else
+            {
+                app.UseSpa(spa =>
+                {
+                    // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                    // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                    spa.Options.SourcePath = "ClientApp";
+                });
+            }
             
         }
     }
