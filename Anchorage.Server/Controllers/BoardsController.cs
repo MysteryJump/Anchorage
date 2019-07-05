@@ -19,7 +19,7 @@ namespace Anchorage.Server.Controllers
     public class BoardsController : ControllerBase
     {
         private readonly MainContext _context;
-
+        private object lockObject;
         public BoardsController(MainContext context)
         {
             _context = context;
@@ -117,11 +117,16 @@ namespace Anchorage.Server.Controllers
                 return BadRequest();
             }
             var response = new Response() { Name = body.Name, Mail = body.Mail, Body = body.Body };
-            response.Initialize(threadId, IpManager.GetHostName(HttpContext.Connection) ,boardKey);
-            _context.Responses.Add(response);
-            thread.ResponseCount += 1;
-            thread.Modified = response.Created;
+
+            lock (lockObject)
+            {
+                response.Initialize(threadId, IpManager.GetHostName(HttpContext.Connection), boardKey);
+                _context.Responses.Add(response);
+                thread.ResponseCount += 1; // この辺が非同期の影響をもろにうける 
+                thread.Modified = response.Created;
+            }
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetThread), new { id = threadId }, response);
         }
 

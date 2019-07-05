@@ -15,6 +15,7 @@ namespace Anchorage.Server.Controllers.Common
             try
             {
                 var ip = connectionInfo.RemoteIpAddress.MapToIPv4().ToString();
+               
                 return ip;
 
             }

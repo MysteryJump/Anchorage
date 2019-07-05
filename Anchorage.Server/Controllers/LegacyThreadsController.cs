@@ -42,18 +42,19 @@ namespace Anchorage.Server.Controllers
             var responses = await _context.Responses.Where(x => x.ThreadId == data.ThreadId).OrderBy(x => x.Created).ToListAsync();
             foreach (var item in responses)
             {
+                var date = item.Created.ToString("yyyy/MM/dd(ddd) HH:mm:ss.FF");
                 if (string.IsNullOrEmpty(item.Name))
                 {
                     item.Name = board.BoardDefaultName;
                 }
                 if (isfirst)
                 {
-                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{item.Created} ID:{item.Author}<> {item.Body} <> {data.Title}");
+                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body} <> {data.Title}");
                     isfirst = false;
                 }
                 else
                 {
-                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{item.Created} ID:{item.Author}<> {item.Body} <>");
+                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body} <>");
                 }
             }
 

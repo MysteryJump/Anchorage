@@ -39,15 +39,18 @@ namespace Anchorage.Server
 
         public static bool IsUsingLegacyMode { get; private set; }
         public static bool IsBlazorMode { get; private set; } = false;
+        public static bool IsUsingCloudflare { get; private set; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddProgressiveWebApp();
+
             // Blazor area
             if (IsBlazorMode)
             {
-                services.AddProgressiveWebApp();
                 services.AddResponseCompression(options =>
                 {
                     options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
@@ -125,6 +128,8 @@ namespace Anchorage.Server
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             IsUsingLegacyMode = Configuration.GetValue<bool>("UseLegacymode");
+            IsBlazorMode = Configuration.GetValue<bool>("IsBlazorMode");
+            IsUsingCloudflare = Configuration.GetValue<bool>("IsBlazorMode");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

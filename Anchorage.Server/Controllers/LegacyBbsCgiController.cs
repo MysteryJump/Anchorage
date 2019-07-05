@@ -36,6 +36,7 @@ namespace Anchorage.Server.Controllers
             var body = HttpContext.Request.Body;
             var sr = new StreamReader(Request.Body);
             var str = await sr.ReadToEndAsync();
+            
             try
             {
                 var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
@@ -112,6 +113,7 @@ namespace Anchorage.Server.Controllers
                             break;
                         case "MESSAGE":
                             Body = HttpUtility.UrlDecode(keyValues[1], sjis);
+                            Body = Body.Replace("\n", "<br>");
                             break;
                         case "subject":
                             Title = HttpUtility.UrlDecode(keyValues[1], sjis);
