@@ -113,7 +113,6 @@ namespace Anchorage.Server.Controllers
                             break;
                         case "MESSAGE":
                             Body = HttpUtility.UrlDecode(keyValues[1], sjis);
-                            Body = Body.Replace("\n", "<br>");
                             break;
                         case "subject":
                             Title = HttpUtility.UrlDecode(keyValues[1], sjis);
@@ -140,6 +139,7 @@ namespace Anchorage.Server.Controllers
 
             public async Task ApplyRequest()
             {
+
                 if (IsThread)
                 {
                     await ApplyThreadRequest();
@@ -148,6 +148,8 @@ namespace Anchorage.Server.Controllers
                 {
                     await ApplyResponseRequest();
                 }
+
+
             }
 
             private async Task ApplyThreadRequest()

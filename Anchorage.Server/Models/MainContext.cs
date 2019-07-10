@@ -21,7 +21,7 @@ namespace Anchorage.Server.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<User>().HasIndex(x => x.UserId).IsUnique(true);
+            // modelBuilder.Entity<User>().HasIndex(x => x.UserId).IsUnique(true);
 
             modelBuilder.Entity<Board>().HasData(new[]
             {

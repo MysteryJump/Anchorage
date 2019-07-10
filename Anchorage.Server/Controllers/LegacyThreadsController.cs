@@ -49,12 +49,12 @@ namespace Anchorage.Server.Controllers
                 }
                 if (isfirst)
                 {
-                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body} <> {data.Title}");
+                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body.Replace("\n","<br>")} <> {data.Title}");
                     isfirst = false;
                 }
                 else
                 {
-                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body} <>");
+                    sb.AppendLine($"{item.Name}<>{item.Mail}<>{date} ID:{item.Author}<> {item.Body.Replace("\n","<br>")} <>");
                 }
             }
 

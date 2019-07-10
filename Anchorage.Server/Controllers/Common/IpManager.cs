@@ -24,5 +24,29 @@ namespace Anchorage.Server.Controllers.Common
                 return null;
             }
         }
+        public static string GetHostName(IHeaderDictionary headers)
+        {
+            if (headers.TryGetValue("CF-CONNECTING-IP", out var ip) && Startup.IsUsingCloudflare)
+            {
+                return ip;
+            }
+            else
+            {
+                return null;
+            }
+           
+        }
+        public static string GetHostName(ConnectionInfo connectionInfo, IHeaderDictionary headers)
+        {
+            var data = GetHostName(headers);
+            if (data != null)
+            {
+                return data;
+            }
+            else
+            {
+                return GetHostName(connectionInfo);
+            }
+        }
     }
 }

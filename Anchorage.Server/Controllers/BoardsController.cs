@@ -19,7 +19,7 @@ namespace Anchorage.Server.Controllers
     public class BoardsController : ControllerBase
     {
         private readonly MainContext _context;
-        private object lockObject;
+        public static object lockObject = new object();
         public BoardsController(MainContext context)
         {
             _context = context;
@@ -91,6 +91,7 @@ namespace Anchorage.Server.Controllers
             {
                 return BadRequest();
             }
+            
             var ip = IpManager.GetHostName(HttpContext.Connection);
             body.Initialize(ip);
             if (Startup.IsUsingLegacyMode)

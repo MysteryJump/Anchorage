@@ -38,7 +38,6 @@ namespace Anchorage.Server
         public IConfiguration Configuration { get; }
 
         public static bool IsUsingLegacyMode { get; private set; }
-        public static bool IsBlazorMode { get; private set; } = false;
         public static bool IsUsingCloudflare { get; private set; }
         
 
@@ -47,19 +46,6 @@ namespace Anchorage.Server
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddProgressiveWebApp();
-
-            // Blazor area
-            if (IsBlazorMode)
-            {
-                services.AddResponseCompression(options =>
-                {
-                    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                    {
-                        MediaTypeNames.Application.Octet,
-                        WasmMediaTypeNames.Application.Wasm,
-                    });
-                });
-            }
 
             services.AddMvc(options =>
             {
@@ -92,14 +78,13 @@ namespace Anchorage.Server
             //    //c.IncludeXmlComments(xmlPath);
             //});
             // SPA area
-            if (!IsBlazorMode)
-            {
+            
                 services.AddSpaStaticFiles(configuration =>
                 {
-                    configuration.RootPath = "ClientApp/dist/anchorage-client";
+                    configuration.RootPath = "ClientApp/anchorage-client/dist/anchorage-client";
                     
                 });
-            }
+            
 
         }
 
@@ -128,7 +113,6 @@ namespace Anchorage.Server
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             IsUsingLegacyMode = Configuration.GetValue<bool>("UseLegacymode");
-            IsBlazorMode = Configuration.GetValue<bool>("IsBlazorMode");
             IsUsingCloudflare = Configuration.GetValue<bool>("IsBlazorMode");
             app.UseMvc(routes =>
             {
@@ -147,12 +131,8 @@ namespace Anchorage.Server
             // Register the Swagger generator and the Swagger UI middlewares
             app.UseOpenApi();
             app.UseSwaggerUi3();
-            if (IsBlazorMode)
-            {
-                app.UseBlazor<Client.Program>();
-            }
-            else
-            {
+
+
                 app.UseSpa(spa =>
                 {
                     // To learn more about options for serving an Angular SPA from ASP.NET Core,
@@ -160,7 +140,6 @@ namespace Anchorage.Server
 
                     spa.Options.SourcePath = "ClientApp";
                 });
-            }
             
         }
     }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anchorage.Server", "Anchorage.Server\Anchorage.Server.csproj", "{8144734A-6EC6-4B4B-94C5-65DCBD0A1E02}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anchorage.Server", "Anchora
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anchorage.Shared", "Anchorage.Shared\Anchorage.Shared.csproj", "{23F2DBFD-F18C-4F52-BF37-A64702953B98}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Anchorage.Client", "Anchorage.Client\Anchorage.Client.csproj", "{6A1ECFA6-10FF-4F55-9DFA-A8C99A5AD09A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +24,6 @@ Global
 		{23F2DBFD-F18C-4F52-BF37-A64702953B98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23F2DBFD-F18C-4F52-BF37-A64702953B98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23F2DBFD-F18C-4F52-BF37-A64702953B98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A1ECFA6-10FF-4F55-9DFA-A8C99A5AD09A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A1ECFA6-10FF-4F55-9DFA-A8C99A5AD09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A1ECFA6-10FF-4F55-9DFA-A8C99A5AD09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A1ECFA6-10FF-4F55-9DFA-A8C99A5AD09A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
