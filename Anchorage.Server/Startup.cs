@@ -39,7 +39,7 @@ namespace Anchorage.Server
 
         public static bool IsUsingLegacyMode { get; private set; }
         public static bool IsUsingCloudflare { get; private set; }
-        
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -52,13 +52,13 @@ namespace Anchorage.Server
                 options.OutputFormatters.Add(new ShiftJISTextOutputFormatter());
             });
 
-            var serverType = (ServerType)Enum.ToObject(typeof(ServerType),int.Parse(Configuration.GetConnectionString("ServerType")));
+            var serverType = (ServerType)Enum.ToObject(typeof(ServerType), int.Parse(Configuration.GetConnectionString("ServerType")));
 
-            services.AddDbContextPool<MainContext>( 
-                options => options.UseMySql(Configuration.GetConnectionString("MainContext"), 
+            services.AddDbContextPool<MainContext>(
+                options => options.UseMySql(Configuration.GetConnectionString("MainContext"),
                     mysqlOptions =>
                     {
-                        mysqlOptions.ServerVersion(new Version(Configuration.GetConnectionString("ServerVersion")), serverType); 
+                        mysqlOptions.ServerVersion(new Version(Configuration.GetConnectionString("ServerVersion")), serverType);
                     }
             ));
 
@@ -78,13 +78,13 @@ namespace Anchorage.Server
             //    //c.IncludeXmlComments(xmlPath);
             //});
             // SPA area
-            
-                services.AddSpaStaticFiles(configuration =>
-                {
-                    configuration.RootPath = "ClientApp/anchorage-client/dist/anchorage-client";
-                    
-                });
-            
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/anchorage-client/dist/anchorage-client";
+
+            });
+
 
         }
 
@@ -133,14 +133,14 @@ namespace Anchorage.Server
             app.UseSwaggerUi3();
 
 
-                app.UseSpa(spa =>
-                {
-                    // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                    // see https://go.microsoft.com/fwlink/?linkid=864501
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                    spa.Options.SourcePath = "ClientApp";
-                });
-            
+                spa.Options.SourcePath = "ClientApp";
+            });
+
         }
     }
 
