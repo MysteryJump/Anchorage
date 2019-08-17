@@ -64,6 +64,10 @@ namespace Anchorage.Server.Controllers
             }
 
             thread.Responses = await _context.Responses.Where(x => x.ThreadId == threadId).ToListAsync();
+            foreach (var item in thread.Responses)
+            {
+                item.Body = item.Body.Replace("<br>", "\n");
+            }
             if (!isAdmin)
             {
                 foreach (var item in thread.Responses)
