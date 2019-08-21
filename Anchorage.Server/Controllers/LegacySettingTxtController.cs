@@ -1,6 +1,6 @@
 ﻿using Anchorage.Server.Models;
-using Anchorage.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Anchorage.Server.Controllers
         [Produces("text/plain; charset=shift_jis")]
         public async Task<IActionResult> GetSettingTxt([FromRoute] string boardKey)
         {
-            var board = _context.Boards.FirstOrDefault(x => x.BoardKey == boardKey);
+            var board = await _context.Boards.FirstOrDefaultAsync(x => x.BoardKey == boardKey);
             var sb = new StringBuilder();
             var boardType = typeof(Board);
             var members = boardType.GetProperties();
@@ -34,8 +34,7 @@ namespace Anchorage.Server.Controllers
                 var attributes = item.GetCustomAttributes(typeof(SettingTxtAttribute));
                 foreach (var attribute in attributes)
                 {
-                    var settingTxtAttr = attribute as SettingTxtAttribute;
-                    if (settingTxtAttr != null)
+                    if (attribute is SettingTxtAttribute settingTxtAttr)
                     {
                         sb.AppendLine(settingTxtAttr.Name + "=" + (string)boardType.GetProperty(item.Name).GetValue(board));
                     }

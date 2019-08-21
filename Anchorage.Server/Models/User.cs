@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Anchorage.Shared.Models
+namespace Anchorage.Server.Models
 {
     public class User
     {

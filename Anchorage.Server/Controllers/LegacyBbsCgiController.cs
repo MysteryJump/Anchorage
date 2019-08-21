@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
-using Anchorage.Shared.Models;
 using Anchorage.Server.Controllers.Common;
 using System.Net;
 using System.IO;
@@ -33,32 +32,31 @@ namespace Anchorage.Server.Controllers
         public async Task<IActionResult> Index()
         {
             // var forms = HttpContext.Request.Form;
-            var body = HttpContext.Request.Body;
-            var sr = new StreamReader(Request.Body);
-            var str = await sr.ReadToEndAsync();
-            
-            try
+            //var body = HttpContext.Request.Body;
+            using (var sr = new StreamReader(Request.Body))
             {
-                var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
-                await req.ApplyRequest();
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (ex.Message == "Body or Title (if you make thread) is neeeded.")
+                var str = await sr.ReadToEndAsync();
+                try
                 {
-                    return BadRequest(ex.Message);
+                    var req = new BbsCgiRequest(str, _context, HttpContext.Connection);
+                    await req.ApplyRequest();
                 }
-                else
+                catch (InvalidOperationException ex)
+                {
+                    if (ex.Message == "Body or Title (if you make thread) is neeeded.")
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }
+                catch
                 {
                     return BadRequest();
                 }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-            
-            return Ok(@"<html lang=""ja"">
+                return Ok(@"<html lang=""ja"">
 <head>
 <title>書きこみました。</title>
 <meta http-equiv=""Content-Type"" content=""text/html; charset=shift_jis"">
@@ -70,6 +68,8 @@ namespace Anchorage.Server.Controllers
 </center>
 </body>
 </html>");
+            }
+            
             
         }
 
@@ -84,8 +84,8 @@ namespace Anchorage.Server.Controllers
 
             public bool IsThread { get; set; } = true;
 
-            private MainContext _context;
-            private ConnectionInfo _connectionInfo;
+            private readonly MainContext _context;
+            private readonly ConnectionInfo _connectionInfo;
             public BbsCgiRequest(string rawText, MainContext context, ConnectionInfo connectionInfo)
             {
                 var splittedKeys = rawText.Split('&');

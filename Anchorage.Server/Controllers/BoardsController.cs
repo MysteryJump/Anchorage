@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Anchorage.Server.Models;
-using Anchorage.Shared.Models;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Sockets;

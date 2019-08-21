@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Anchorage.Shared.Models
+namespace Anchorage.Server.Models
 {
     public class Response : ClientResponse
     {

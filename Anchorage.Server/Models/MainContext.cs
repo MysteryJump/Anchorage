@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Anchorage.Shared.Models;
 using Newtonsoft.Json;
 
 namespace Anchorage.Server.Models

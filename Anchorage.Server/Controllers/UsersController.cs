@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Anchorage.Server.Models;
-using Anchorage.Shared.Models;
 
 namespace Anchorage.Server.Controllers
 {
@@ -63,9 +62,7 @@ namespace Anchorage.Server.Controllers
 
             await _context.SaveChangesAsync();
             user.PasswordHash = Common.HashPasswordGenerator.GeneratePasswordHash(password, user.Id);
-            password = null;
             await _context.SaveChangesAsync();
-            user = null;
             return Ok();
         }
 

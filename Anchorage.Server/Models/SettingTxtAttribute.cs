@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Anchorage.Shared.Models
+namespace Anchorage.Server.Models
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class SettingTxtAttribute : Attribute
