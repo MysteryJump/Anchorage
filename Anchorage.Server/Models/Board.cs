@@ -23,6 +23,9 @@ namespace Anchorage.Server.Models
         [Required]
         [SettingTxt("BBS_NONAME_NAME")]
         public string BoardDefaultName { get; set; }
+
+        [SettingTxt("BBS_SAMBATIME")]
+        public string BoardSambaTime => 30.ToString();
         
     }
 }
