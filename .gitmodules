@@ -1,3 +1,0 @@
-[submodule "Anchorage.Server/ClientApp/anchorage-client"]
-path = Anchorage.Server/ClientApp/anchorage-client
-url = https://github.com/MysteryJump/anchorage-client.git
